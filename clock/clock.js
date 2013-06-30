@@ -26,7 +26,7 @@ function withinRange(value, target, range) {
 }
 
 
-function Bar() {
+function Clock() {
     this.ctx = $("#main")[0].getContext("2d");
     
     setInterval(function() {
@@ -36,7 +36,7 @@ function Bar() {
 }
 
 
-Bar.prototype.draw = function() {
+Clock.prototype.draw = function() {
     var rightEdge = window.innerWidth;
     var bottomEdge = window.innerHeight;
     this.centerX = rightEdge/2;
@@ -62,7 +62,7 @@ Bar.prototype.draw = function() {
     this.drawHands(hours, minutes, seconds)
 }
 
-Bar.prototype.drawHands = function(hours, minutes, seconds) {
+Clock.prototype.drawHands = function(hours, minutes, seconds) {
     var LONG_HAND_LENGTH = 130;
     
     this.ctx.beginPath();
@@ -93,7 +93,7 @@ Bar.prototype.drawHands = function(hours, minutes, seconds) {
     drawHand(this.getTickAngle(seconds-15), LONG_HAND_LENGTH, true);
 }
 
-Bar.prototype.drawTicks = function() {
+Clock.prototype.drawTicks = function() {
     var tickHeight, endCoords, startCoords, textXOffset, textYOffset, textValue;
     this.ctx.font = "20px Helvetica";
     this.ctx.textAlign = "center";
@@ -135,7 +135,7 @@ Bar.prototype.drawTicks = function() {
     }
 }
 
-Bar.prototype.getTickLength = function(num) {
+Clock.prototype.getTickLength = function(num) {
     if (num % 5) {
         return 20;
     }
@@ -144,18 +144,18 @@ Bar.prototype.getTickLength = function(num) {
     }
 }
 
-Bar.prototype.getTickAngle = function(num) {
+Clock.prototype.getTickAngle = function(num) {
     return num*(Math.PI*2/60);
 }
 
-Bar.prototype.getTickStartCoords = function(num) {
+Clock.prototype.getTickStartCoords = function(num) {
     var angle = this.getTickAngle(num);
     var startX = 200*Math.cos(angle)+this.centerX;
     var startY = 200*Math.sin(angle)+this.centerY;
     return {x:startX, y:startY}
 }
 
-Bar.prototype.getTickEndOffset = function(num, length) {
+Clock.prototype.getTickEndOffset = function(num, length) {
     if (!length) {
         length = this.getTickLength(num);
     }
@@ -163,7 +163,7 @@ Bar.prototype.getTickEndOffset = function(num, length) {
     return {x:length*Math.cos(angle), y:length*Math.sin(angle)}
 }
 
-Bar.prototype.getTickEndCoords = function(num, length) {
+Clock.prototype.getTickEndCoords = function(num, length) {
     var starts = this.getTickStartCoords(num);
     var ends = this.getTickEndOffset(num, length);
     return  {x:starts.x-ends.x, y:starts.y-ends.y};
@@ -171,15 +171,6 @@ Bar.prototype.getTickEndCoords = function(num, length) {
     
 window.addEventListener("DOMContentLoaded", function() { 
     $("#main").attr("width", window.innerWidth).attr("height", window.innerHeight);
-    new Bar();
-    $(document).keydown(function(e) {
-        // Emergency stop
-        if (e.which == 32) {
-            GLOBAL_TIMERS.reverse();
-            for (var i in GLOBAL_TIMERS) {
-                clearTimeout(GLOBAL_TIMERS[i]);
-            }
-        }
-    });
+    new Clock();
         
 });
